@@ -1,10 +1,8 @@
-import sys
 import urllib.request
-import enum
 
 from lxml import etree
 
-from annonce import Ad
+from .annonce import Ad
 
 class Items:
     PRIX         = 0
@@ -14,25 +12,29 @@ class Items:
     PIECES       = 4
     SURFACE      = 5
 
-def parse_page(html):
+def parse_page(httpurl):
+    try:
+        with urllib.request.urlopen(httpurl) as response:
+            html = response.read()
+    except urllib.error.URLError:
+        print("cannot reach url " + httpurl)
+        return
+
     root = etree.HTML(html) #pylint: disable=no-member
     # props = root.xpath("//span[@class='property']")
     vals = root.xpath("//span[@class='value']")
     img = root.xpath("//meta[@property='og:image']")
+
+    if len(vals) < 6:
+       print("error: unable to parse html page content")
+       return
 
     ad = Ad(vals[Items.PRIX].text.strip().encode().decode(),
             vals[Items.SURFACE].text.strip(),
             vals[Items.VILLE].text.strip(),
             atype=vals[Items.TYPE].text.strip(),
             rooms=vals[Items.PIECES].text.strip(),
-            img=img[0].attrib['content'])
+            img=img[0].attrib['content'],
+            url=httpurl)
 
-    print(str(ad))
-
-def read_page(httpurl):
-    with urllib.request.urlopen(httpurl) as response:
-        html = response.read()
-    parse_page(html)
-
-if __name__ == '__main__':
-    read_page(sys.argv[1])
+    return ad
