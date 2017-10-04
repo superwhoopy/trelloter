@@ -1,6 +1,5 @@
 import logging
 import enum
-import urllib.request
 
 from lxml import etree
 
@@ -16,14 +15,7 @@ class Items(enum.Enum):
     PIECES       = 'Pièces'
     SURFACE      = 'Surface'
 
-def parse_page(httpurl):
-    try:
-        with urllib.request.urlopen(httpurl) as response:
-            html = response.read()
-    except urllib.error.URLError:
-        log.error("cannot reach url " + httpurl)
-        return
-
+def parse_page(html, httpurl=None):
     root = etree.HTML(html) #pylint: disable=no-member
     props = root.xpath("//span[@class='property']")
     vals = root.xpath("//span[@class='value']")

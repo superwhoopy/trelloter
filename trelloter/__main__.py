@@ -1,15 +1,18 @@
 import argparse
 import logging
 import textwrap
+import urllib.request
 from collections import namedtuple
 
 from . import leboncoin
+from . import logicimmo
 from . import trellopost
 
 Parser = namedtuple('Parser', ['domain', 'parsefunc'])
 
 PARSERS = (
     Parser("leboncoin.fr", leboncoin.parse_page),
+    Parser("logic-immo.com", logicimmo.parse_page)
 )
 
 def main():
@@ -32,7 +35,14 @@ def main():
         parser = parser[0]
 
         logging.info("Fetching ad from '{}'".format(url))
-        ad = leboncoin.parse_page(url)
+        try:
+            with urllib.request.urlopen(url) as response:
+                html = response.read()
+        except urllib.error.URLError:
+            logging.error("cannot reach url " + url)
+            return
+
+        ad = parser(html, url)
         # ad = annonce.Ad('0eur', '0 m2', 'Tombouctou', 'Palace', '0',
         #                 'http://tamere', 'http://fuckyou')
         logging.info("Registering this ad:\n" + textwrap.indent(str(ad), '  '))

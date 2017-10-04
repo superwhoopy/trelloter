@@ -5,16 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python",
+            "name": "Launch",
             "type": "python",
             "request": "launch",
             "stopOnEntry": true,
             "pythonPath": "${config:python.pythonPath}",
-            "program": "${file}",
+            "program": "${workspaceRoot}/launch.py",
             "cwd": "${workspaceRoot}",
             "env": {},
             "args": [
-                "https://www.leboncoin.fr/ventes_immobilieres/1157887889.htm"
+                "-d",
+                "--dry",
+                "http://www.logic-immo.com/detail-vente-fc35fbb0-f771-c92e-2398-7cb4ccb7d0ff.htm?mea=orpi",
+                "http://www.logic-immo.com/detail-vente-74dd00da-387a-4015-b30d-12d623a75eb8.htm",
+                "https://www.leboncoin.fr/ventes_immobilieres/1310214064.htm?ca=12_s"
             ],
             "debugOptions": [
                 "WaitOnAbnormalExit",

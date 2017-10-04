@@ -1,11 +1,25 @@
-from collections import namedtuple
 
-_Ad = namedtuple('Ad', ['price', 'surface', 'town', 'atype', 'rooms', 'img',
-                       'url'])
+class Ad(object):
 
-class Ad(_Ad):
+    def __init__(self, price, surface, town, atype, rooms, img, url):
+        self.price = self.stringify(price, 'eur')
+        self.surface = self.stringify(surface, 'm2')
+        self.town = town
+        self.atype = atype
+        self.rooms = self.stringify(rooms, 'P')
+        self.img = img
+        self.url = url
+
+    @staticmethod
+    def stringify(intarg, suffix):
+        try:
+            intval = int(intarg)
+        except ValueError:
+            return intarg
+        return "{}{}".format(intval, suffix)
+
     def short(self):
-        return "{atype} {rooms}P {surface} {town}, {price}".format(
+        return "{atype} {rooms} {surface} {town}, {price}".format(
             atype=self.atype, rooms=self.rooms, surface=self.surface,
             town=self.town, price=self.price)
 
