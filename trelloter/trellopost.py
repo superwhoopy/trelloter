@@ -1,5 +1,4 @@
-import trello
-
+from . import trello
 from . import annonce
 
 TRELLO_KEY = 'f8b22befcd70f239ba9c9971694da1a5'
@@ -9,8 +8,8 @@ BOARD_APPART = '58cf886abe89030dafe85432'
 LIST_CONTACT = '58cf88704ca8bc50a99948f9'
 
 def register_ad(ad):
-    title = ad.desc()
-    desc = "bar"
+    title = ad.short()
+    desc = ""
     card_handler = trello.Cards(TRELLO_KEY, token=TRELLO_TOKEN)
     card = card_handler.new(title, LIST_CONTACT, desc=desc)
     card_handler.new_attachment(card['id'], ad.img, 'Image')
